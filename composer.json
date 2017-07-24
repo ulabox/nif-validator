@@ -1,0 +1,30 @@
+{
+    "name": "ulabox/nif-validator",
+    "description": "Yet another(?) PHP implementation of the spanish NIF validator",
+    "keywords": ["NIF", "validator"],
+    "homepage": "https://github.com/ulabox/nif-validator",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Albert Casademont",
+            "email": "albert@ulabox.com"
+        }
+    ],
+    "require": {
+        "php": "~7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "NifValidator\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "NifValidator\\": "tests/"
+        }
+    }
+}
