@@ -8,6 +8,14 @@ A modern PHP 7.0+ Spanish NIF (Número de Indentifación Fiscal) validator.
 
 Other NIF validators we saw either had really obscure code or just implemented a validator for the DNI/NIE, not the CIF. 
 
+## Installation
+
+Using Composer:
+
+```
+composer require ulabox/nif-validator
+```
+
 ## Usage
 
 
