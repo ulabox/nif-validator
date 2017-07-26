@@ -12,9 +12,10 @@ class NifValidator
 
     const NIF_LETTER_CHECK_TABLE = 'JABCDEFGHI';
 
-    const DNI_REGEX = '#^(?<dni>[0-9]{8})(?<check>[A-Z])$#';
-    const NIE_REGEX = '#^(?<nie_type>['. self::NIE_TYPES .'])(?<nie>[0-9]{7})(?<check>[A-Z])$#';
-    const OTHER_NIF_REGEX = '#^(?<nif_type>[ABCDEFGHJKLMNPQRSUVW])(?<nif>[0-9]{7})(?<check>[0-9A-Z])$#';
+    const DNI_REGEX = '#^(?<number>[0-9]{8})(?<check>[A-Z])$#';
+    const NIE_REGEX = '#^(?<type>['. self::NIE_TYPES .'])(?<number>[0-9]{7})(?<check>[A-Z])$#';
+    const OTHER_PERSONAL_NIF_REGEX = '#^(?<type>[KLM])(?<number>[0-9]{7})(?<check>[0-9A-Z])$#';
+    const CIF_REGEX = '#^(?<type>[ABCDEFGHJNPQRSUVW])(?<number>[0-9]{7})(?<check>[0-9A-Z])$#';
 
     /**
      * Validate Spanish NIFS
@@ -22,7 +23,23 @@ class NifValidator
      */
     public static function isValid(string $nif): bool
     {
-        return self::isValidDni($nif) || self::isValidNie($nif) || self::isValidOtherNif($nif);
+        return self::isValidDni($nif) || self::isValidNie($nif) || self::isValidCif($nif) || self::isValidOtherPersonalNif($nif);
+    }
+
+    /**
+     * Validate Spanish NIFS given to persons
+     */
+    public static function isValidPersonal(string $nif): bool
+    {
+        return self::isValidDni($nif) || self::isValidNie($nif) || self::isValidOtherPersonalNif($nif);
+    }
+
+    /**
+     * Validate Spanish NIFS given to non-personal entities (e.g. companies, public corporations, ngos...)
+     */
+    public static function isValidEntity(string $nif): bool
+    {
+        return self::isValidCif($nif);
     }
 
     /**
@@ -35,7 +52,7 @@ class NifValidator
             return false;
         }
 
-        return self::DNINIE_CHECK_TABLE[$matches['dni'] % 23] === $matches['check'];
+        return self::DNINIE_CHECK_TABLE[$matches['number'] % 23] === $matches['check'];
     }
 
     /**
@@ -48,25 +65,49 @@ class NifValidator
             return false;
         }
 
-        $nieType = strpos(self::NIE_TYPES, $matches['nie_type']);
-        $nie = $nieType . $matches['nie'];
+        $nieType = strpos(self::NIE_TYPES, $matches['type']);
+        $nie = $nieType . $matches['number'];
 
         return self::DNINIE_CHECK_TABLE[$nie % 23] === $matches['check'];
     }
 
     /**
-     * Other NIFS and CIFS get more complicated. See references
+     * Other personal NIFS are meant for temporary residents that do not qualify for a NIE but nonetheless need a NIF
+     *
+     * See references
      *
      * @see https://es.wikipedia.org/wiki/N%C3%BAmero_de_identificaci%C3%B3n_fiscal
      * @see https://es.wikipedia.org/wiki/C%C3%B3digo_de_identificaci%C3%B3n_fiscal
      */
-    private static function isValidOtherNif(string $nif): bool
+    private static function isValidOtherPersonalNif(string $nif): bool
     {
-        if (!preg_match(self::OTHER_NIF_REGEX, $nif, $matches)) {
+        if (!preg_match(self::OTHER_PERSONAL_NIF_REGEX, $nif, $matches)) {
             return false;
         }
 
-        $split = str_split($matches['nif']);
+        return self::isValidNifCheck($nif, $matches);
+    }
+
+    /**
+     * CIFS are only meant for non-personal entities
+     *
+     * See references
+     *
+     * @see https://es.wikipedia.org/wiki/N%C3%BAmero_de_identificaci%C3%B3n_fiscal
+     * @see https://es.wikipedia.org/wiki/C%C3%B3digo_de_identificaci%C3%B3n_fiscal
+     */
+    private static function isValidCif(string $cif): bool
+    {
+        if (!preg_match(self::CIF_REGEX, $cif, $matches)) {
+            return false;
+        }
+
+        return self::isValidNifCheck($cif, $matches);
+    }
+
+    private static function isValidNifCheck(string $nif, array $matches)
+    {
+        $split = str_split($matches['number']);
 
         $even = array_filter($split, function($key) {
             return $key & 1;
@@ -83,12 +124,12 @@ class NifValidator
         $calculatedCheckDigit = (10 - ($sumEven + $sumOdd) % 10) % 10;
 
         //Nifs with only letters
-        if (self::nifHasLetterCheck($matches['nif_type'], $nif)) {
+        if (self::nifHasLetterCheck($matches['type'], $nif)) {
             return self::checkNifLetter($calculatedCheckDigit, $matches['check']);
         }
 
         //Nifs with only numbers
-        if (self::nifHasNumberCheck($matches['nif_type'], $nif)) {
+        if (self::nifHasNumberCheck($matches['type'], $nif)) {
             return self::checkNifNumber($calculatedCheckDigit, $matches['check']);
         }
 
