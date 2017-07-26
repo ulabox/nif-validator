@@ -33,4 +33,20 @@ assert(NifValidator::isValid('X5102754C'));
 
 ```
 
+Starting from version 1.1.x you can also separetely validate personal and entity nifs
+
+```php
+<?php
+
+use NifValidator\NifValidator;
+
+//CIF
+assert(NifValidator::isValidEntity('B65410011'));
+//DNI
+assert(NifValidator::isValidPersonal('93471790C'));
+//NIE
+assert(NifValidator::isValidPersonal('X5102754C'));
+
+```
+
 This validator does not strip or uppercase any character, it's your responsibility to previously filter the input.
