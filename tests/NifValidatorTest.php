@@ -65,8 +65,8 @@ class NifValidatorTest extends TestCase
     public function invalidNifs()
     {
         return array_merge(
-            $this->invalidPersonalNifs(),
-            $this->invalidEntityNifs(),
+            $this->invalidPersonalNifs(true),
+            $this->invalidEntityNifs(true),
             [
                 //Garbage
                 ['AAAAAAAAA'],
@@ -92,9 +92,9 @@ class NifValidatorTest extends TestCase
         ];
     }
 
-    public function invalidPersonalNifs()
+    public function invalidPersonalNifs($onlyPersonal = false)
     {
-        return [
+        return array_merge([
             //DNI
             ['93471790A'],
             ['43596386B'],
@@ -103,7 +103,7 @@ class NifValidatorTest extends TestCase
             ['Z8327649B'],
             ['Y4174455C'],
             //Other NIF
-        ];
+        ], true === $onlyPersonal ? [] : $this->validEntityNifs());
     }
 
     public function validEntityNifs()
@@ -120,15 +120,15 @@ class NifValidatorTest extends TestCase
         ];
     }
 
-    public function invalidEntityNifs()
+    public function invalidEntityNifs($onlyEntity = false)
     {
-        return [
+        return array_merge([
             //CIF
             ['B6541001A'],
             ['V75659382'],
             ['F0605378J'],
             ['Q22388772'],
             ['D4002295C'],
-        ];
+        ], true === $onlyEntity ? [] : $this->validPersonalNifs());
     }
 }
