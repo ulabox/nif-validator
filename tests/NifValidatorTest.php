@@ -68,6 +68,7 @@ class NifValidatorTest extends TestCase
             ['BBBBB'],
             ['1'],
             ['93471790C0'],
+            ['00000000T'],
         ];
     }
 

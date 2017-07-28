@@ -51,6 +51,9 @@ class NifValidator
         if (!preg_match(self::DNI_REGEX, $dni, $matches)) {
             return false;
         }
+        if ('00000000' === $matches['number']) {
+            return false;
+        }
 
         return self::DNINIE_CHECK_TABLE[$matches['number'] % 23] === $matches['check'];
     }
