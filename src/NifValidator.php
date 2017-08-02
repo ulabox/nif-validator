@@ -46,7 +46,7 @@ class NifValidator
      * DNI validation is pretty straight forward.
      * Just mod 23 the 8 digit number and compare it to the check table
      */
-    private static function isValidDni(string $dni): bool
+    public static function isValidDni(string $dni): bool
     {
         if (!preg_match(self::DNI_REGEX, $dni, $matches)) {
             return false;
@@ -62,7 +62,7 @@ class NifValidator
      * NIE validation is similar to the DNI.
      * The first letter needs an equivalent number before the mod operation
      */
-    private static function isValidNie(string $nie): bool
+    public static function isValidNie(string $nie): bool
     {
         if (!preg_match(self::NIE_REGEX, $nie, $matches)) {
             return false;
@@ -82,7 +82,7 @@ class NifValidator
      * @see https://es.wikipedia.org/wiki/N%C3%BAmero_de_identificaci%C3%B3n_fiscal
      * @see https://es.wikipedia.org/wiki/C%C3%B3digo_de_identificaci%C3%B3n_fiscal
      */
-    private static function isValidOtherPersonalNif(string $nif): bool
+    public static function isValidOtherPersonalNif(string $nif): bool
     {
         if (!preg_match(self::OTHER_PERSONAL_NIF_REGEX, $nif, $matches)) {
             return false;
@@ -99,7 +99,7 @@ class NifValidator
      * @see https://es.wikipedia.org/wiki/N%C3%BAmero_de_identificaci%C3%B3n_fiscal
      * @see https://es.wikipedia.org/wiki/C%C3%B3digo_de_identificaci%C3%B3n_fiscal
      */
-    private static function isValidCif(string $cif): bool
+    public static function isValidCif(string $cif): bool
     {
         if (!preg_match(self::CIF_REGEX, $cif, $matches)) {
             return false;
