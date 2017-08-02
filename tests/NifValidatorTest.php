@@ -83,6 +83,8 @@ class NifValidatorTest extends TestCase
             ['Z8327649K'],
             ['Y4174455S'],
             //Other NIF
+            ['K9514336H'],
+            ['00000010X'],
         ];
     }
 
@@ -97,6 +99,8 @@ class NifValidatorTest extends TestCase
             ['Z8327649B'],
             ['Y4174455C'],
             //Other NIF
+            ['M3118299M'],
+            ['00000010Y']
         ];
     }
 
