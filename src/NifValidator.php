@@ -108,7 +108,7 @@ class NifValidator
         return self::isValidNifCheck($cif, $matches);
     }
 
-    private static function isValidNifCheck(string $nif, array $matches)
+    private static function isValidNifCheck(string $nif, array $matches): bool
     {
         $split = str_split($matches['number']);
 
